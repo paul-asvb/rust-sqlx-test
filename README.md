@@ -1,0 +1,1 @@
+# rust sqlx type examples
