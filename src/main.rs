@@ -1,19 +1,19 @@
+use std::fmt::Display;
+
 use dotenv;
 use sqlx::PgPool;
 
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
+    dotenv::dotenv();
+
     let pool = PgPool::connect(&dotenv::var("DATABASE_URL")?).await?;
 
-    sqlx::query!(
+    sqlx::query(
         r#"
-            INSERT INTO rust_test ( id, some_bool, name, current_mood )
-            VALUES ( $1,$2,$3,$4)
-        "#,
-        1,
-        false,
-        "somename".to_string(),
-        Sad
+        INSERT INTO rust_test ( id, some_bool, name, current_mood  )
+        VALUES (1,false,'blablalba', 'sad')
+        "#
     )
     .execute(&pool)
     .await?;
