@@ -5,26 +5,15 @@ use sqlx::PgPool;
 async fn main() -> anyhow::Result<()> {
     let pool = PgPool::connect(&dotenv::var("DATABASE_URL")?).await?;
 
-    let create_tables = std::include_str!("../migrations/01.sql");
-
-    sqlx::query(create_tables).execute(&pool).await?;
-
     sqlx::query!(
         r#"
-            INSERT INTO rust_test ( id )
-            VALUES ( $1 )
+            INSERT INTO rust_test ( id, some_bool, name, current_mood )
+            VALUES ( $1,$2,$3,$4)
         "#,
-        1
-    )
-    .execute(&pool)
-    .await?;
-
-    sqlx::query!(
-        r#"
-            INSERT INTO rust_test ( id )
-            VALUES ( $1 )
-        "#,
-        1
+        1,
+        false,
+        "somename".to_string(),
+        Sad
     )
     .execute(&pool)
     .await?;
@@ -32,7 +21,8 @@ async fn main() -> anyhow::Result<()> {
     let test_struct = sqlx::query_as!(
         TestStruct,
         r#"
-        SELECT *
+        SELECT 
+        id, some_bool, name, current_mood as "current_mood: Mood"
         FROM rust_test
         "#
     )
@@ -46,4 +36,23 @@ async fn main() -> anyhow::Result<()> {
 #[derive(Debug)]
 struct TestStruct {
     id: Option<i32>,
+    some_bool: Option<bool>,
+    name: Option<String>,
+    //item: Option<InventoryItem>,
+    current_mood: Option<Mood>,
 }
+
+#[derive(sqlx::Type, Debug)]
+#[sqlx(type_name = "mood", rename_all = "lowercase")]
+enum Mood {
+    Sad,
+    Ok,
+    Happy,
+}
+
+// #[derive(Debug, sqlx::Type)]
+// #[sqlx(type_name = "inventory_item")]
+// struct InventoryItem {
+//     name: String,
+//     supplier_id: i32,
+// }
