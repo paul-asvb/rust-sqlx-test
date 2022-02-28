@@ -38,7 +38,6 @@ struct TestStruct {
     id: Option<i32>,
     some_bool: Option<bool>,
     name: Option<String>,
-    //item: Option<InventoryItem>,
     current_mood: Option<Mood>,
 }
 
@@ -49,10 +48,3 @@ enum Mood {
     Ok,
     Happy,
 }
-
-// #[derive(Debug, sqlx::Type)]
-// #[sqlx(type_name = "inventory_item")]
-// struct InventoryItem {
-//     name: String,
-//     supplier_id: i32,
-// }
