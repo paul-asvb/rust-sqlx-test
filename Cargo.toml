@@ -9,5 +9,5 @@ version = "0.1.0"
 anyhow = "1.0.55"
 async-std = {version = "1.10.0", features = ["attributes"]}
 dotenv = "0.15.0"
-sqlx = {version = "0.5.11", features = ["runtime-async-std-rustls", "postgres", "chrono", "json"]}
+sqlx = {version = "0.5.11", features = ["runtime-async-std-rustls", "sqlite", "chrono", "json"]}
 tokio = {version = "1.17.0", features = ["full"]}

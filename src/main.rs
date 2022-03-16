@@ -1,10 +1,11 @@
 use dotenv;
+use sqlx::{SqliteConnection, Connection};
 
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
+    dotenv::dotenv();
 
     let conn = SqliteConnection::connect("sqlite::memory:").await?;
-
 
     sqlx::query(
         r#"
@@ -15,18 +16,18 @@ async fn main() -> anyhow::Result<()> {
     .execute(&conn)
     .await?;
 
-    // let test_struct = sqlx::query_as!(
-    //     TestStruct,
-    //     r#"
-    //     SELECT 
-    //     id, some_bool, name, current_mood as "current_mood: Mood"
-    //     FROM rust_test
-    //     "#
-    // )
-    // .fetch_all(&pool)
-    // .await?;
+    let test_struct = sqlx::query_as!(
+        TestStruct,
+        r#"
+        SELECT 
+        id, some_bool, name, current_mood as "current_mood: Mood"
+        FROM rust_test
+        "#
+    )
+    .fetch_all(&conn)
+    .await?;
 
-    //print!("{:?}", test_struct);
+    print!("{:?}", test_struct);
 
     Ok(())
 }
